@@ -1,0 +1,129 @@
+.detail-page {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #e94560;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  padding: 0;
+}
+
+.detail-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 600px) {
+  .detail-container { grid-template-columns: 1fr; }
+}
+
+.detail-img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  max-height: 400px;
+}
+
+.detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.detail-category {
+  font-size: 0.8rem;
+  color: #e94560;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.detail-info h1 {
+  margin: 0;
+  color: #eee;
+  font-size: 1.8rem;
+}
+
+.detail-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #e94560;
+  margin: 0;
+}
+
+.detail-description {
+  color: #aaa;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.detail-stock {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.quantity-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity-row button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e94560;
+  background: none;
+  color: #e94560;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-row span {
+  font-size: 1.1rem;
+  color: #eee;
+  min-width: 24px;
+  text-align: center;
+}
+
+.btn-add-detail {
+  padding: 0.8rem;
+  background: #e94560;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.btn-add-detail:hover:not(:disabled) { background: #c73652; }
+.btn-add-detail:disabled { background: #555; cursor: not-allowed; }
+
+.loading {
+  text-align: center;
+  color: #888;
+  padding: 4rem;
+}
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #e94560;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  z-index: 999;
+}
