@@ -5,6 +5,8 @@ import ProductsPage from './pages/ProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import AdminPage from './pages/AdminPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ErrorBoundary from './components/ErrorBoundary';
 import { cartService } from './services/api';
 import './App.css';
 
@@ -29,12 +31,15 @@ function App() {
     <BrowserRouter>
       <Navbar cartCount={cartCount} />
       <main>
-        <Routes>
-          <Route path="/" element={<ProductsPage onCartUpdate={refreshCartCount} />} />
-          <Route path="/products/:id" element={<ProductDetailPage onCartUpdate={refreshCartCount} />} />
-          <Route path="/cart" element={<CartPage onCartUpdate={refreshCartCount} />} />
-          <Route path="/admin" element={<AdminPage />} />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<ProductsPage onCartUpdate={refreshCartCount} />} />
+            <Route path="/products/:id" element={<ProductDetailPage onCartUpdate={refreshCartCount} />} />
+            <Route path="/cart" element={<CartPage onCartUpdate={refreshCartCount} />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </ErrorBoundary>
       </main>
     </BrowserRouter>
   );
