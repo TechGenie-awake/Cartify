@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { productService, cartService } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import './ProductsPage.css';
@@ -12,11 +12,7 @@ export default function ProductsPage({ onCartUpdate }) {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState('');
 
-  useEffect(() => {
-    loadProducts();
-  }, [search, category]);
-
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
       const params = {};
@@ -29,7 +25,11 @@ export default function ProductsPage({ onCartUpdate }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, category]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   const handleAddToCart = async (productId) => {
     try {

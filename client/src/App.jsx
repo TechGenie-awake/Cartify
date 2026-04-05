@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProductsPage from './pages/ProductsPage';
@@ -14,11 +14,7 @@ import './App.css';
 function App() {
   const [cartCount, setCartCount] = useState(0);
 
-  useEffect(() => {
-    refreshCartCount();
-  }, []);
-
-  const refreshCartCount = async () => {
+  const refreshCartCount = useCallback(async () => {
     try {
       const cart = await cartService.getCart();
       const count = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
@@ -26,7 +22,16 @@ function App() {
     } catch {
       setCartCount(0);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    cartService.getCart()
+      .then((cart) => {
+        const count = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+        setCartCount(count);
+      })
+      .catch(() => setCartCount(0));
+  }, []);
 
   return (
     <BrowserRouter>

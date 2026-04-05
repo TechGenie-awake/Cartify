@@ -19,7 +19,7 @@ export default function ProductDetailPage({ onCartUpdate }) {
       .then(setProduct)
       .catch(() => navigate('/'))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, navigate]);
 
   const handleAddToCart = async () => {
     try {
