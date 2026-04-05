@@ -84,4 +84,13 @@ const removeFromCart = async (req, res) => {
   }
 };
 
-module.exports = { getCart, addToCart, updateCartItem, removeFromCart };
+const clearCart = async (req, res) => {
+  try {
+    await prisma.cartItem.deleteMany({ where: { cartId: CART_ID } });
+    res.json({ message: 'Cart cleared' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { getCart, addToCart, updateCartItem, removeFromCart, clearCart };

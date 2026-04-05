@@ -1,14 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: #0f0e17;
-  color: #eee;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-
 main {
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 64px);
 }

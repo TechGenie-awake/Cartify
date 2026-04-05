@@ -18,4 +18,5 @@ export const cartService = {
     api.post('/cart', { productId, quantity }).then((r) => r.data),
   updateItem: (id, quantity) => api.put(`/cart/${id}`, { quantity }).then((r) => r.data),
   removeItem: (id) => api.delete(`/cart/${id}`).then((r) => r.data),
+  clearCart: () => api.delete('/cart').then((r) => r.data),
 };

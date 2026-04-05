@@ -41,6 +41,16 @@ export default function CartPage({ onCartUpdate }) {
     }
   };
 
+  const handleClearCart = async () => {
+    try {
+      await cartService.clearCart();
+      await loadCart();
+      if (onCartUpdate) onCartUpdate();
+    } catch {
+      // ignore
+    }
+  };
+
   if (loading) return <div className="cart-loading">Loading cart...</div>;
 
   const items = cart?.items || [];
@@ -87,6 +97,7 @@ export default function CartPage({ onCartUpdate }) {
               <span>${total.toFixed(2)}</span>
             </div>
             <button className="btn-checkout">Checkout</button>
+            <button className="btn-clear-cart" onClick={handleClearCart}>Clear Cart</button>
             <Link to="/" className="continue-shopping">Continue Shopping</Link>
           </div>
         </div>

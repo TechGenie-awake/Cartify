@@ -2,57 +2,99 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
-  height: 60px;
-  background: #1a1a2e;
+  padding: 0 2.5rem;
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .navbar-brand {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: #e94560;
-  text-decoration: none;
-  letter-spacing: 1px;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navbar-brand span {
+  color: var(--red);
 }
 
 .navbar-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   align-items: center;
 }
 
 .navbar-links a {
-  color: #ccc;
-  text-decoration: none;
-  font-size: 0.95rem;
-  transition: color 0.2s;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.15s;
 }
 
 .navbar-links a:hover,
 .navbar-links a.active {
-  color: #e94560;
+  color: var(--text-primary);
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
 }
 
 .cart-link {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  position: relative;
+  transition: color 0.15s;
+}
+
+.cart-link:hover,
+.cart-link.active {
+  color: var(--text-primary);
+}
+
+.cart-icon {
+  font-size: 1.2rem;
+  position: relative;
 }
 
 .cart-badge {
-  background: #e94560;
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--red);
   color: white;
   border-radius: 50%;
-  font-size: 0.7rem;
-  width: 18px;
-  height: 18px;
+  font-size: 0.6rem;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
 }
+
+.admin-btn {
+  padding: 0.4rem 1rem;
+  background: var(--text-primary);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.admin-btn:hover { background: var(--accent-hover); }
+.admin-btn.active { background: var(--red); }
