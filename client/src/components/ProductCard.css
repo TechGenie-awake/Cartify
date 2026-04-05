@@ -30,18 +30,14 @@
 
 .card-img-wrap {
   display: block;
-  background: #f9f9f9;
-  padding: 1.5rem;
   height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
 }
 
 .card-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   transition: transform 0.3s;
 }
 

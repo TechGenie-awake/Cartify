@@ -52,10 +52,17 @@ export default function ProductsPage({ onCartUpdate }) {
 
       {/* Hero */}
       <div className="hero-banner">
-        <div className="hero-content">
-          <h1>Give All You Need</h1>
+        <img src="/herosection.jpg" alt="hero" className="hero-bg" />
+        <div className="hero-overlay" />
+        <div className="hero-big-text">Shop</div>
+      </div>
+
+      {/* Search bar */}
+      <div className="search-section-outer">
+        <div className="search-section">
+          <h2>Give All You Need</h2>
           <div className="hero-search">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
             <input
               type="text"
               placeholder="Search on Cartify"
@@ -67,7 +74,7 @@ export default function ProductsPage({ onCartUpdate }) {
         </div>
       </div>
 
-      <div className="shop-body">
+      <div className="shop-body-outer"><div className="shop-body">
         {/* Sidebar */}
         <aside className="sidebar">
           <h4>Category</h4>
@@ -79,7 +86,11 @@ export default function ProductsPage({ onCartUpdate }) {
                 onClick={() => setCategory(cat)}
               >
                 <span className="cat-icon">
-                  {cat === 'All' ? '🛍️' : cat === 'Electronics' ? '🎧' : cat === 'Accessories' ? '🎒' : cat === 'Clothing' ? '👕' : '📚'}
+                  {cat === 'All' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>}
+                  {cat === 'Electronics' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>}
+                  {cat === 'Accessories' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>}
+                  {cat === 'Clothing' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>}
+                  {cat === 'Books' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>}
                 </span>
                 {cat === 'All' ? 'All Products' : `For ${cat}`}
               </li>
@@ -110,22 +121,8 @@ export default function ProductsPage({ onCartUpdate }) {
             </div>
           )}
         </div>
-      </div>
+      </div></div>
 
-      {/* CTA Banner */}
-      <div className="cta-banner">
-        <div className="cta-left">
-          <h2>Ready to Get Our New Stuff?</h2>
-          <div className="cta-form">
-            <input type="email" placeholder="Your Email" />
-            <button>Send</button>
-          </div>
-        </div>
-        <div className="cta-right">
-          <strong>Cartify for Everyone</strong>
-          <p>Browse our curated collection of products across categories — quality you can trust, prices you'll love.</p>
-        </div>
-      </div>
     </div>
   );
 }

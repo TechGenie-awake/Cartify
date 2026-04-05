@@ -7,6 +7,7 @@ import CartPage from './pages/CartPage';
 import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ErrorBoundary from './components/ErrorBoundary';
+import Footer from './components/Footer';
 import { cartService } from './services/api';
 import './App.css';
 
@@ -41,6 +42,7 @@ function App() {
           </Routes>
         </ErrorBoundary>
       </main>
+      <Footer />
     </BrowserRouter>
   );
 }

@@ -80,7 +80,7 @@ export default function AdminPage() {
       <form className="product-form" onSubmit={handleSubmit}>
         <h2>{editId ? 'Edit Product' : 'Add New Product'}</h2>
         <div className="form-grid">
-          {['name', 'image', 'category'].map((field) => (
+          {['name', 'category'].map((field) => (
             <input
               key={field}
               type="text"
@@ -90,6 +90,14 @@ export default function AdminPage() {
               required
             />
           ))}
+          <input
+            type="url"
+            placeholder="Image URL (e.g. https://images.unsplash.com/...)"
+            value={form.image}
+            onChange={(e) => setForm({ ...form, image: e.target.value })}
+            required
+            style={{ gridColumn: '1 / -1' }}
+          />
           <input
             type="number"
             placeholder="Price"
