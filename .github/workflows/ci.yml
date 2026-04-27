@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   server-lint-test:
     name: Server — Lint & Test
@@ -59,26 +63,118 @@ jobs:
         run: npm run build
         working-directory: client
 
-  deploy:
-    name: Deploy to EC2
+  build-and-push:
+    name: Build & Push to ECR
     runs-on: ubuntu-latest
     needs: [server-lint-test, client-lint-build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Compute image tag
+        id: meta
+        run: echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Build & push server image
+        env:
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          REPO: cartify-server
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          docker build -t "$REGISTRY/$REPO:$TAG" -t "$REGISTRY/$REPO:latest" ./server
+          docker push "$REGISTRY/$REPO:$TAG"
+          docker push "$REGISTRY/$REPO:latest"
+
+      - name: Build & push client image
+        env:
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          REPO: cartify-client
+          TAG: ${{ steps.meta.outputs.tag }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: |
+          docker build \
+            --build-arg VITE_API_URL="$VITE_API_URL" \
+            -t "$REGISTRY/$REPO:$TAG" \
+            -t "$REGISTRY/$REPO:latest" \
+            ./client
+          docker push "$REGISTRY/$REPO:$TAG"
+          docker push "$REGISTRY/$REPO:latest"
+
+  deploy-server:
+    name: Deploy Server to ECS
+    runs-on: ubuntu-latest
+    needs: build-and-push
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd ~/cartify
-            git pull origin main
-            cd server
-            npm ci --only=production
-            npx prisma migrate deploy
-            pm2 restart cartify-server || pm2 start src/index.js --name cartify-server
-            pm2 save
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Render server task definition
+        id: render
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/task-definition-server.json
+          container-name: cartify-server
+          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/cartify-server:${{ needs.build-and-push.outputs.image-tag }}
+          environment-variables: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            CLIENT_URL=${{ secrets.CLIENT_URL }}
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render.outputs.task-definition }}
+          cluster: cartify-cluster
+          service: cartify-server-svc
+          wait-for-service-stability: true
+
+  deploy-client:
+    name: Deploy Client to ECS
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Render client task definition
+        id: render
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/task-definition-client.json
+          container-name: cartify-client
+          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/cartify-client:${{ needs.build-and-push.outputs.image-tag }}
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render.outputs.task-definition }}
+          cluster: cartify-cluster
+          service: cartify-client-svc
+          wait-for-service-stability: true
